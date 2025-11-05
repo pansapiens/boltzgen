@@ -189,6 +189,13 @@ def add_configure_arguments(
         default=10000,
     )
     p.add_argument(
+        "--start_index",
+        type=int,
+        default=0,
+        help="First index offset for file naming. Allows multiple concurrent processes to generate "
+        "non-overlapping design indices. Default: %(default)s",
+    )
+    p.add_argument(
         "--diffusion_batch_size",
         type=int,
         default=None,
@@ -946,6 +953,7 @@ class BinderDesignPipeline:
                         f"override.use_kernels={use_kernels}",
                         f"checkpoint={get_artifact_path(args, args.inverse_fold_checkpoint)}",
                         f"data.cfg.moldir={moldir}",
+                        f"data.cfg.skip_offset={args.start_index}",
                     ]
                     + config_args_by_step.get("inverse_folding", []),
                 )
@@ -966,6 +974,7 @@ class BinderDesignPipeline:
                         f"diffusion_samples={diffusion_batch_size}",
                         f"override.use_kernels={use_kernels}",
                         f"data.cfg.moldir={moldir}",
+                        f"data.cfg.skip_offset={args.start_index}",
                     ]
                     + design_step_and_noise_scale_args
                     + checkpoint_args
@@ -1013,6 +1022,7 @@ class BinderDesignPipeline:
                             f"data.cfg.moldir={moldir}",
                             f"trainer.devices={devices}",
                             f"override.inverse_fold_args.inverse_fold_restriction=[{', '.join(exclude_residues)}]",
+                            f"data.cfg.skip_offset={args.start_index}",
                         ]
                         + config_args_by_step["inverse_folding"],
                     )
@@ -1034,6 +1044,7 @@ class BinderDesignPipeline:
                     f"override.use_kernels={use_kernels}",
                     f"checkpoint={get_artifact_path(args, args.folding_checkpoint)}",
                     f"data.cfg.moldir={moldir}",
+                    f"data.cfg.skip_offset={args.start_index}",
                 ]
                 + config_args_by_step["folding"],
             )
@@ -1059,6 +1070,7 @@ class BinderDesignPipeline:
                         f"data.cfg.moldir={moldir}",
                         f"writer.designfolding=True",
                         f"data.cfg.return_designfolding=True",
+                        f"data.cfg.skip_offset={args.start_index}",
                     ]
                     + config_args_by_step["design_folding"],
                 )

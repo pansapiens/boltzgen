@@ -61,6 +61,7 @@ class DataConfig:
     design_mask_override: Optional[str] = None
     multiplicity: int = 1
     return_designfolding: bool = False
+    skip_offset: int = 0
 
 
 def collate(data: List[Dict[str, Tensor]]) -> Dict[str, Tensor]:
@@ -212,6 +213,7 @@ class FromGeneratedDataset(torch.utils.data.Dataset):
         use_new_design_mask: bool = False,
         multiplicity: int = 1,
         return_designfolding=False,
+        skip_offset: int = 0,
     ) -> None:
         """
         Parameters
@@ -248,6 +250,7 @@ class FromGeneratedDataset(torch.utils.data.Dataset):
         self.use_new_design_mask = use_new_design_mask
         self.multiplicity = multiplicity
         self.return_designfolding = return_designfolding
+        self.skip_offset = skip_offset
 
     def __getitem__(self, idx: int) -> Dict:
         """Get an item from the dataset.
@@ -257,7 +260,7 @@ class FromGeneratedDataset(torch.utils.data.Dataset):
         Dict[str, Tensor]
 
         """
-        data_sample_idx = idx // len(self.generated_paths)
+        data_sample_idx = idx // len(self.generated_paths) + self.skip_offset
         idx = idx % len(self.generated_paths)
 
         try:
@@ -596,6 +599,7 @@ class FromGeneratedDataModule(pl.LightningDataModule):
                 use_new_design_mask=use_new_design_mask,
                 multiplicity=self.cfg.multiplicity,
                 return_designfolding=self.cfg.return_designfolding,
+                skip_offset=self.cfg.skip_offset,
             )
 
     def init_dataset(
@@ -804,6 +808,7 @@ class FromGeneratedDataModule(pl.LightningDataModule):
             use_new_design_mask=use_new_design_mask,
             multiplicity=self.cfg.multiplicity,
             return_designfolding=self.cfg.return_designfolding,
+            skip_offset=self.cfg.skip_offset,
         )
 
     def predict_dataloader(self) -> DataLoader:

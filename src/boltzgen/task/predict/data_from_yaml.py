@@ -310,7 +310,7 @@ class PredictionDataset(torch.utils.data.Dataset):
             The length of the dataset.
 
         """
-        total = len(self.yaml_paths) * (self.dataset.multiplicity - self.skip_offset)
+        total = len(self.yaml_paths) * self.dataset.multiplicity
         return max(total, 0)
 
 
@@ -330,7 +330,8 @@ class FromYamlDataModule(pl.LightningDataModule):
         """
         super().__init__()
 
-        if cfg.skip_existing and cfg.output_dir is not None:
+        # Only auto-calculate skip_offset if user hasn't explicitly set it
+        if cfg.skip_existing and cfg.output_dir is not None and cfg.skip_offset == 0:
             design_dir = Path(cfg.output_dir)
             max_idx: int = -1
             if design_dir.exists():
