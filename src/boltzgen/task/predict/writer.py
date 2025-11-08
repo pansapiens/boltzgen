@@ -299,13 +299,10 @@ class DesignWriter(BasePredictionWriter):
                     )
                     global_idx = sample_idx * n_samples + n
 
-                    if total_files > 1:
-                        num_digits = len(str(total_files - 1))
-                        file_name = (
-                            f"{stem}_{global_idx:0{num_digits}d}{self.file_suffix}"
-                        )
-                    else:
-                        file_name = f"{stem}{self.file_suffix}"
+                    num_digits = len(str(total_files - 1)) if total_files > 1 else 1
+                    file_name = (
+                        f"{stem}_{global_idx:0{num_digits}d}{self.file_suffix}"
+                    )
 
                 native_path = f"{self.outdir}/{file_name}_native.cif"
                 gen_path = f"{self.outdir}/{file_name}.cif"
