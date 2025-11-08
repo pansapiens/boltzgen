@@ -279,8 +279,7 @@ class PredictionDataset(torch.utils.data.Dataset):
             return re.sub(r"[^A-Za-z0-9._-]", "_", name)
 
         features["id"] = sanitize_filename(target_id)
-        if self.dataset.multiplicity > 1:
-            features["data_sample_idx"] = data_sample_idx
+        features["data_sample_idx"] = data_sample_idx
         return features
 
     def __len__(self) -> int:

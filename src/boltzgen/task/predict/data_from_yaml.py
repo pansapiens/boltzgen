@@ -194,8 +194,7 @@ class PredictionDataset(torch.utils.data.Dataset):
         path = Path(self.yaml_paths[idx % len(self.yaml_paths)])
         feat = self.get_sample(path)
         data_sample_idx = idx // len(self.yaml_paths) + self.skip_offset
-        if self.dataset.multiplicity > 1:
-            feat["data_sample_idx"] = data_sample_idx
+        feat["data_sample_idx"] = data_sample_idx
         return feat
 
     def get_sample(self, path: Path, sample_id: Optional[str] = None) -> Dict:

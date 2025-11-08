@@ -434,8 +434,7 @@ class PredictionDataset(torch.utils.data.Dataset):
             features["structure"] = structure
         if "tokenized" in self.extra_features:
             features["tokenized"] = tokenized
-        if self.multiplicity > 1:
-            features["data_sample_idx"] = data_sample_idx
+        features["data_sample_idx"] = data_sample_idx
         return features
 
     def __len__(self) -> int:

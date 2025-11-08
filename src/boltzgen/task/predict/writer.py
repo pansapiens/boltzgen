@@ -299,7 +299,10 @@ class DesignWriter(BasePredictionWriter):
                     )
                     global_idx = sample_idx * n_samples + n
 
-                    num_digits = len(str(total_files - 1)) if total_files > 1 else 1
+                    # Calculate number of digits needed, accounting for start_index/skip_offset
+                    skip_offset = getattr(trainer.datamodule.cfg, "skip_offset", 0)
+                    max_idx = skip_offset * n_samples + total_files - 1
+                    num_digits = len(str(max_idx)) if max_idx > 0 else 1
                     file_name = (
                         f"{stem}_{global_idx:0{num_digits}d}{self.file_suffix}"
                     )

@@ -269,8 +269,7 @@ class FromGeneratedDataset(torch.utils.data.Dataset):
                 self.generated_paths[idx],
                 self.native_paths[idx],
             )
-            if self.multiplicity > 1:
-                feat["data_sample_idx"] = data_sample_idx
+            feat["data_sample_idx"] = data_sample_idx
             return feat
         except DataFetchException:
             idx = random.randint(0, len(self) - 1)
@@ -279,8 +278,7 @@ class FromGeneratedDataset(torch.utils.data.Dataset):
                 self.generated_paths[idx],
                 self.native_paths[idx],
             )
-            if self.multiplicity > 1:
-                feat["data_sample_idx"] = data_sample_idx
+            feat["data_sample_idx"] = data_sample_idx
             return feat
 
     def get_sample(self, design_dir: Path, sample_id: Optional[str] = None) -> Dict:
